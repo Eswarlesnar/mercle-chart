@@ -1,5 +1,5 @@
 // EngagementHelper.js
-import Highcharts from "highcharts"
+import Highcharts, { Point , Options } from "highcharts"
 
 
 interface Message {
@@ -18,10 +18,27 @@ interface ChannelsWithMultipleDates {
 }
 
 
+const plotEvents = {  
+  mouseOver(this : Point){
+    const activePoint = this.series.chart.hoverPoint
+    const xvalue = activePoint?.x
+    activePoint?.series.chart.xAxis[0].addPlotLine({
+      value : xvalue , 
+      color : "white" , 
+      width : 1 , 
+      zIndex : 10 , 
+      id : "active-x-grid-line"
+    })
+  },
+  mouseOut(this : Point){
+   this.series.chart.xAxis[0].removePlotLine("active-x-grid-line")
+  }
+} 
+
+
 const engagementMessageOverTimeChartOptions = (messageCountList : Message[], channels : Channel[]) => {
-  // Extract channelIds with messages on more than one date
+  // channels with messages on more than one date
   const channelsWithMultipleDates   = messageCountList.reduce((acc : ChannelsWithMultipleDates, msg) => {
-    
     
     if (acc[msg.channelId]) {
       acc[msg.channelId]++;
@@ -32,20 +49,19 @@ const engagementMessageOverTimeChartOptions = (messageCountList : Message[], cha
   }, {});
 
 
-  const uniqueDates = new Set(messageCountList.map(msg => new Date(msg.timeBucket).getTime()))
+  // const uniqueDates = new Set(messageCountList.map(msg => new Date(msg.timeBucket).getTime()))
 
-  console.log(Array.from(uniqueDates).map(timestamp => Highcharts.dateFormat("%d-%b" , timestamp)))
+  // console.log(Array.from(uniqueDates).map(timestamp => Highcharts.dateFormat("%d-%b" , timestamp)))
 
   
 
-  // Filter channels that have messages on more than one date
+  //  channels that have messages on more than one date
   const relevantChannels = channels.filter(
     (channel : Channel) => channelsWithMultipleDates[channel.id] > 1
   );
 
 
-  // Prepare data for Highcharts
-  const seriesData = relevantChannels.map((channel) => {
+  const seriesData   = relevantChannels.map((channel) => {
     const data = messageCountList
       .filter((msg) => msg.channelId === channel.id)
       .map((msg) => [new Date(msg.timeBucket).getTime(), parseInt(msg.count)]);
@@ -59,7 +75,7 @@ const engagementMessageOverTimeChartOptions = (messageCountList : Message[], cha
 
 
   // Define Highcharts options
-  const options : Highcharts.Options = {
+  const options : Options = {
     chart: {
       type: "spline",
     },
@@ -81,8 +97,7 @@ const engagementMessageOverTimeChartOptions = (messageCountList : Message[], cha
     yAxis: {
         title: {
           text: "",
-        },
-        
+        }, 
     },
     colors : ["#008F8D"] , 
     tooltip: {
@@ -90,7 +105,7 @@ const engagementMessageOverTimeChartOptions = (messageCountList : Message[], cha
       formatter: function () {
         return (
           `<strong >${this.series.name}</strong><br>` +
-          `<p > ${this.y} messages on ${Highcharts.dateFormat("%d-%b", parseInt(this.x))} </p>`
+          `<p > ${this.y} messages on ${Highcharts.dateFormat("%d-%b", parseInt(this?.x))} </p>`
         );
       },
       
@@ -98,22 +113,7 @@ const engagementMessageOverTimeChartOptions = (messageCountList : Message[], cha
     plotOptions : {
       series : {
         point : {
-          events : {  
-            mouseOver(e : Event){
-              const activePoint = this.series.chart.hoverPoint
-              const xvalue = activePoint?.x
-              activePoint?.series.chart.xAxis[0].addPlotLine({
-                value : xvalue , 
-                color : "white" , 
-                width : 1 , 
-                zIndex : 10 , 
-                id : "active-x-grid-line"
-              })
-            },
-            mouseOut(e){
-             this.series.chart.xAxis[0].removePlotLine("active-x-grid-line")
-            }
-          } ,
+          events : plotEvents ,
         }
       }
     },

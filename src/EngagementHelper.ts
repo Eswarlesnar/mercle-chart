@@ -1,13 +1,26 @@
 // EngagementHelper.js
 import Highcharts from "highcharts"
-import { Options } from "./App";
 
 
-// EngagementHelper.js
+interface Message {
+  count : string , 
+  timeBucket : string , 
+  channelId : string
+}
 
-const engagementMessageOverTimeChartOptions = (messageCountList, channels) => {
+interface Channel {
+   id : string , 
+   name : string
+}
+
+interface ChannelsWithMultipleDates {
+   [key : string] : number
+}
+
+
+const engagementMessageOverTimeChartOptions = (messageCountList : Message[], channels : Channel[]) => {
   // Extract channelIds with messages on more than one date
-  const channelsWithMultipleDates = messageCountList.reduce((acc, msg) => {
+  const channelsWithMultipleDates   = messageCountList.reduce((acc : ChannelsWithMultipleDates, msg) => {
     if (acc[msg.channelId]) {
       acc[msg.channelId]++;
     } else {
@@ -18,7 +31,7 @@ const engagementMessageOverTimeChartOptions = (messageCountList, channels) => {
 
   // Filter channels that have messages on more than one date
   const relevantChannels = channels.filter(
-    (channel) => channelsWithMultipleDates[channel.id] > 1
+    (channel : Channel) => channelsWithMultipleDates[channel.id] > 1
   );
 
 
@@ -39,7 +52,7 @@ const engagementMessageOverTimeChartOptions = (messageCountList, channels) => {
   console.log(seriesData)
 
   // Define Highcharts options
-  const options : Options = {
+  const options : Highcharts.Options = {
     chart: {
       type: "spline",
     },
@@ -64,7 +77,7 @@ const engagementMessageOverTimeChartOptions = (messageCountList, channels) => {
       formatter: function () {
         return (
           `<strong >${this.series.name}</strong><br>` +
-          `<p > ${this.y} messages on ${Highcharts.dateFormat("%d-%b", this.x)} </p>`
+          `<p > ${this.y} messages on ${Highcharts.dateFormat("%d-%b", parseInt(this.x))} </p>`
         );
       },
     },

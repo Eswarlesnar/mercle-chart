@@ -31,20 +31,20 @@
 }
 
 .highcharts-xaxis-grid .highcharts-grid-line{ 
-    stroke-width:1px
+    stroke-width:1px;
+    opacity : 0;
 }
 
 .highcharts-yaxis-grid .highcharts-grid-line{
     stroke-width:0px
 }
 
-.highcharts-xaxis-grid .highcharts-grid-line{
-    stroke-width:0px
+
+.highcharts-xaxis-grid > .highcharts-grid-line:active{
+    stroke-width:1px;
+    opacity : 1;
 }
 
-.highcharts-xaxis-grid:first-child path{
-    stroke-width:1px
-}
 
 .highcharts-tooltip-box{
     fill: 	rgb(12 ,12 ,15);

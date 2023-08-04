@@ -21,6 +21,8 @@ interface ChannelsWithMultipleDates {
 const engagementMessageOverTimeChartOptions = (messageCountList : Message[], channels : Channel[]) => {
   // Extract channelIds with messages on more than one date
   const channelsWithMultipleDates   = messageCountList.reduce((acc : ChannelsWithMultipleDates, msg) => {
+    
+    
     if (acc[msg.channelId]) {
       acc[msg.channelId]++;
     } else {
@@ -29,27 +31,32 @@ const engagementMessageOverTimeChartOptions = (messageCountList : Message[], cha
     return acc;
   }, {});
 
+
+  const uniqueDates = new Set(messageCountList.map(msg => new Date(msg.timeBucket).getTime()))
+
+  console.log(Array.from(uniqueDates).map(timestamp => Highcharts.dateFormat("%d-%b" , timestamp)))
+
+  
+
   // Filter channels that have messages on more than one date
   const relevantChannels = channels.filter(
     (channel : Channel) => channelsWithMultipleDates[channel.id] > 1
   );
 
 
-  console.log(relevantChannels, "relevantChanels")
-
   // Prepare data for Highcharts
   const seriesData = relevantChannels.map((channel) => {
     const data = messageCountList
       .filter((msg) => msg.channelId === channel.id)
       .map((msg) => [new Date(msg.timeBucket).getTime(), parseInt(msg.count)]);
-    console.log(data , "dtat")
+    
     return {
       name: channel.name,
       data,
     };
   });
 
-  console.log(seriesData)
+
 
   // Define Highcharts options
   const options : Highcharts.Options = {
@@ -57,19 +64,25 @@ const engagementMessageOverTimeChartOptions = (messageCountList : Message[], cha
       type: "spline",
     },
     title: {
-      text: "Engagement: Messages Over Time",
+      text: "",
     },
     xAxis: {
       type: "datetime",
       title: {
-        text: "Date",
+        text: "",
       },
+      // categories : Array.from(uniqueDates).map(timestamp => Highcharts.dateFormat("%d-%b" , timestamp)),
+      grid : {
+        enabled : false ,
+        
+      }, 
+    
     },
     yAxis: {
-      title: {
-        text: "Message Count",
-      },
-      
+        title: {
+          text: "",
+        },
+        
     },
     colors : ["#008F8D"] , 
     tooltip: {
@@ -80,6 +93,29 @@ const engagementMessageOverTimeChartOptions = (messageCountList : Message[], cha
           `<p > ${this.y} messages on ${Highcharts.dateFormat("%d-%b", parseInt(this.x))} </p>`
         );
       },
+      
+    },
+    plotOptions : {
+      series : {
+        point : {
+          events : {  
+            mouseOver(e : Event){
+              const activePoint = this.series.chart.hoverPoint
+              const xvalue = activePoint?.x
+              activePoint?.series.chart.xAxis[0].addPlotLine({
+                value : xvalue , 
+                color : "white" , 
+                width : 1 , 
+                zIndex : 10 , 
+                id : "active-x-grid-line"
+              })
+            },
+            mouseOut(e){
+             this.series.chart.xAxis[0].removePlotLine("active-x-grid-line")
+            }
+          } ,
+        }
+      }
     },
     series: seriesData,
   };

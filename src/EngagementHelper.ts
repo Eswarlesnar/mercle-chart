@@ -1,5 +1,5 @@
 // EngagementHelper.js
-import Highcharts, { Point , Options } from "highcharts"
+import Highcharts, { Point , Options  } from "highcharts"
 
 
 interface Message {
@@ -20,6 +20,7 @@ interface ChannelsWithMultipleDates {
 
 const plotEvents = {  
   mouseOver(this : Point){
+    // console.log( this.series.points[0])
     const activePoint = this.series.chart.hoverPoint
     const xvalue = activePoint?.x
     activePoint?.series.chart.xAxis[0].addPlotLine({
@@ -28,7 +29,10 @@ const plotEvents = {
       width : 1 , 
       zIndex : 10 , 
       id : "active-x-grid-line"
-    })
+    });
+    
+    
+
   },
   mouseOut(this : Point){
    this.series.chart.xAxis[0].removePlotLine("active-x-grid-line")
@@ -98,6 +102,7 @@ const engagementMessageOverTimeChartOptions = (messageCountList : Message[], cha
         title: {
           text: "",
         }, 
+        // alignTicks : true , 
     },
     colors : ["#008F8D"] , 
     tooltip: {
@@ -108,13 +113,17 @@ const engagementMessageOverTimeChartOptions = (messageCountList : Message[], cha
           `<p > ${this.y} messages on ${Highcharts.dateFormat("%d-%b", parseInt(this?.x))} </p>`
         );
       },
+    
       
     },
     plotOptions : {
       series : {
+        marker : {
+          enabled : false
+        },
         point : {
           events : plotEvents ,
-        }
+        }, 
       }
     },
     series: seriesData,

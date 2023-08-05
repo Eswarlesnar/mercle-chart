@@ -111,6 +111,7 @@ const engagementMessageOverTimeChartOptions = (messageCountList : Message[], cha
       formatter: function () {
         return (
           `<strong >${this.series.name}</strong><br>` +
+          // @ts-ignore
           `<p > ${this.y} messages on ${Highcharts.dateFormat("%d-%b", parseInt(this?.x))} </p>`
         );
       },
@@ -127,6 +128,7 @@ const engagementMessageOverTimeChartOptions = (messageCountList : Message[], cha
         }, 
       }
     },
+    // @ts-ignore
     series: seriesData,
   };
 

@@ -10,8 +10,10 @@ const App = (props: HighchartsReact.Props) =>  {
 
   const options  = engagementHelper.engagementMessageOverTimeChartOptions(messageCountList, channels)
  
- return <HighchartsReact 
-   highcharts = {Highcharts} options = {options}  {...props}/>
+ return <div className='chart-wrapper' style={{marginTop : "200px"}}>
+    <HighchartsReact 
+      highcharts = {Highcharts} options = {options}  {...props}/>
+ </div>
 }
 
 export default App

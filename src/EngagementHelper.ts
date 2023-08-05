@@ -82,6 +82,7 @@ const engagementMessageOverTimeChartOptions = (messageCountList : Message[], cha
   const options : Options = {
     chart: {
       type: "spline",
+      styledMode : true
     },
     title: {
       text: "",
@@ -91,7 +92,6 @@ const engagementMessageOverTimeChartOptions = (messageCountList : Message[], cha
       title: {
         text: "",
       },
-      // categories : Array.from(uniqueDates).map(timestamp => Highcharts.dateFormat("%d-%b" , timestamp)),
       grid : {
         enabled : false ,
         
@@ -102,7 +102,8 @@ const engagementMessageOverTimeChartOptions = (messageCountList : Message[], cha
         title: {
           text: "",
         }, 
-        // alignTicks : true , 
+        tickWidth : 2
+     
     },
     colors : ["#008F8D"] , 
     tooltip: {

@@ -13,11 +13,10 @@
     --highcharts-color-9: #7798bf;
     --highcharts-neutral-color-80 : gray;    
 };
+
+
   
 
-.highcharts-container{ 
-    font-family:Dosis,arial,helvetica,sans-serif ;
-}
 
 .highcharts-title,.highcharts-subtitle,.highcharts-yaxis .highcharts-axis-title{
     text-transform:uppercase
@@ -28,7 +27,7 @@
 }
 
 .highcharts-axis-labels{ 
-    font-size:1em;
+    font-size:0.7em;
 }
 
 .highcharts-axis-labels > text {
@@ -49,9 +48,10 @@
 }
 
 
+
 .highcharts-tooltip-box{
     fill: 	rgb(12 ,12 ,15);
-    stroke-width: 1.7px;
+    stroke-width: 1.5px;
     
 }
 
@@ -66,12 +66,19 @@
 }
 
 
-.highcharts-legend-item > .highcharts-point {
+/* .highcharts-legend-item > .highcharts-point {
     opacity : 0;
-}
+} */
 
  .highcharts-label > text { 
     fill : rgb(173 ,173,173) !important
 }
 
+.highcharts-yaxis .highcharts-tick {
+    stroke-width: 2
+}
 
+.chart-wrapper{
+    width : 90%;
+    margin : 100px auto
+}

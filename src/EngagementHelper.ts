@@ -1,5 +1,5 @@
 // EngagementHelper.js
-import Highcharts, { Point , Options  } from "highcharts"
+import Highcharts, { Point , Options, TooltipFormatterContextObject  } from "highcharts"
 
 
 interface Message {
@@ -20,7 +20,6 @@ interface ChannelsWithMultipleDates {
 
 const plotEvents = {  
   mouseOver(this : Point){
-    // console.log( this.series.points[0])
     const activePoint = this.series.chart.hoverPoint
     const xvalue = activePoint?.x
     activePoint?.series.chart.xAxis[0].addPlotLine({
@@ -30,9 +29,6 @@ const plotEvents = {
       zIndex : 10 , 
       id : "active-x-grid-line"
     });
-    
-    
-
   },
   mouseOut(this : Point){
    this.series.chart.xAxis[0].removePlotLine("active-x-grid-line")
@@ -52,14 +48,6 @@ const engagementMessageOverTimeChartOptions = (messageCountList : Message[], cha
     return acc;
   }, {});
 
-
-  // const uniqueDates = new Set(messageCountList.map(msg => new Date(msg.timeBucket).getTime()))
-
-  // console.log(Array.from(uniqueDates).map(timestamp => Highcharts.dateFormat("%d-%b" , timestamp)))
-
-  
-
-  //  channels that have messages on more than one date
   const relevantChannels = channels.filter(
     (channel : Channel) => channelsWithMultipleDates[channel.id] > 1
   );
@@ -94,25 +82,24 @@ const engagementMessageOverTimeChartOptions = (messageCountList : Message[], cha
       },
       grid : {
         enabled : false ,
-        
       }, 
+      tickInterval : 24*3600*1000
     
     },
     yAxis: {
         title: {
           text: "",
         }, 
-        tickWidth : 2
-     
+        tickWidth : 2,
     },
     colors : ["#008F8D"] , 
     tooltip: {
       className : "tooltip-custom",
-      formatter: function () {
+      formatter: function (this : TooltipFormatterContextObject) {
         return (
           `<strong >${this.series.name}</strong><br>` +
-          // @ts-ignore
-          `<p > ${this.y} messages on ${Highcharts.dateFormat("%d-%b", parseInt(this?.x))} </p>`
+          //@ts-ignore
+          `<p > ${this.y} messages on ${Highcharts.dateFormat("%d-%b", parseInt(this.x))} </p>`
         );
       },
     
@@ -134,6 +121,7 @@ const engagementMessageOverTimeChartOptions = (messageCountList : Message[], cha
 
   return options;
 };
+
 
 const engagementHelper = {
   engagementMessageOverTimeChartOptions,

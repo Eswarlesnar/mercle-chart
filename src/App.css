@@ -11,7 +11,7 @@
     --highcharts-color-7: #55bf3b;
     --highcharts-color-8: #df5353;
     --highcharts-color-9: #7798bf;
-    --highcharts-neutral-color-80 : gray;    
+    --highcharts-neutral-color-80 : rgb(64, 63, 63);    
 }
 
 
@@ -31,7 +31,9 @@
 }
 
 .highcharts-axis-labels > text {
-    fill : gray !important;
+    fill : rgb(67, 73 , 69) !important;
+    font-size : 12px;
+    font-weight: 700;
 }
 
 .highcharts-xaxis{
@@ -51,8 +53,7 @@
 
 .highcharts-tooltip-box{
     fill: 	rgb(12 ,12 ,15);
-    stroke-width: 1.5px;
-    
+    stroke-width: 1.5px;  
 }
 
 .highcharts-background {
@@ -64,11 +65,6 @@
    fill : white !important; 
    color : white
 }
-
-
-/* .highcharts-legend-item > .highcharts-point {
-    opacity : 0;
-} */
 
  .highcharts-label > text { 
     fill : rgb(173 ,173,173) !important

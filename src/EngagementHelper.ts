@@ -84,7 +84,6 @@ const engagementMessageOverTimeChartOptions = (messageCountList : Message[], cha
         enabled : false ,
       }, 
       tickInterval : 24*3600*1000
-    
     },
     yAxis: {
         title: {
@@ -96,10 +95,11 @@ const engagementMessageOverTimeChartOptions = (messageCountList : Message[], cha
     tooltip: {
       className : "tooltip-custom",
       formatter: function (this : TooltipFormatterContextObject) {
+        //dateFormat typescript is complaining about s
+        const dateString = this.x?.toString() ?? "N/A"
         return (
           `<strong >${this.series.name}</strong><br>` +
-          //@ts-ignore
-          `<p > ${this.y} messages on ${Highcharts.dateFormat("%d-%b", parseInt(this.x))} </p>`
+          `<p > ${this.y} messages on ${ Highcharts.dateFormat("%d-%b", parseInt(dateString))} </p>`
         );
       },
     
